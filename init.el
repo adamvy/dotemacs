@@ -56,6 +56,3 @@
 (setq compilation-error-regexp-alist
       (append compilation-error-regexp-alist
               '(("ERROR: \\([^:]+\\):\\([0-9]+\\)" 1 2))))
-
-(with-eval-after-load 'project
-  (define-key project-prefix-map (kbd "v") (lambda () (interactive) (magit-status (project-root (project-current))))))
