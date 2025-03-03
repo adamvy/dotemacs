@@ -4,7 +4,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-1password-vault "Personal")
+ '(c-basic-offset 2)
  '(column-number-mode t)
+ '(compilation-scroll-output 'first-error)
  '(custom-enabled-themes '(spacemacs-light))
  '(custom-safe-themes
    '("7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf" "bbb13492a15c3258f29c21d251da1e62f1abb8bbd492386a673dcfab474186af" "98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd" "6ac2faf17d4d37b6f4bc08203b70e82f4b3b5ce76f102fb4802b3f6c74460743" "1d1f4f5b0f792f0bb1b8f944b8ed93b3b20bbebc4ba072c2b7daff82da23ae86" "039112154ee5166278a7b65790c665fe17fd21c84356b7ad4b90c29ffe0ad606" "f700bc979515153bef7a52ca46a62c0aa519950cc06d539df4f3d38828944a2c" default))
@@ -12,6 +14,7 @@
  '(global-undo-tree-mode t)
  '(ido-everywhere t)
  '(ido-mode 'both nil (ido))
+ '(indent-tabs-mode nil)
  '(js-indent-level 2)
  '(package-archives
    '(("melpa" . "https://melpa.org/packages/")
@@ -20,6 +23,7 @@
  '(package-selected-packages
    '(go-mode neotree kotlin-mode tree-sitter-langs swift-mode gptel auth-source-1password spacemacs-theme olivetti nord-theme undo-tree visual-fill visual-fill-column base16-theme magit eglot-java eglot dape helm-project helm-lsp helm lsp-java dap-mode llm projectile project))
  '(tool-bar-mode nil)
+ '(visible-bell t)
  '(xref-search-program 'ripgrep))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -56,3 +60,4 @@
 (setq compilation-error-regexp-alist
       (append compilation-error-regexp-alist
               '(("ERROR: \\([^:]+\\):\\([0-9]+\\)" 1 2))))
+
