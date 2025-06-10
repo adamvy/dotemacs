@@ -58,7 +58,6 @@
       (append compilation-error-regexp-alist
               '(("ERROR: \\([^:]+\\):\\([0-9]+\\)" 1 2))))
 
-
 (gptel-make-tool
  :name "read_buffer"                    ; javascript-style snake_case name
  :function (lambda (buffer)                  ; the function that will run
@@ -129,3 +128,11 @@
                :type string
                :description "the directory to search in"))
  :category "codebase")
+
+(defun gptel-add-marked-files ()
+  "Add marked files in Dired to gptel context."
+  (interactive)
+  (let ((files (dired-get-marked-files)))
+    (dolist (file files)
+      (gptel-add-file file))
+    (message "Added %d file(s) to gptel context" (length files))))
