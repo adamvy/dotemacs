@@ -34,28 +34,18 @@
  '(default ((t (:family "Source Code Pro"))))
  '(variable-pitch ((t (:family "Georgia")))))
 
+(package-install-selected-packages)
 (package-activate-all)
-
-(require 'eglot)
-(let ((jdtls-path "~/.emacs.d/jdtls/bin/jdtls")
-      (java-debug-jar (car (file-expand-wildcards "~/.emacs.d/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"))))
-  (add-to-list 'eglot-server-programs
-               `((java-mode java-ts-mode)
-                 . (,jdtls-path
-                    :initializationOptions
-                    (:bundles [,java-debug-jar])))))
 
 (require 'auth-source-1password)
 (auth-source-1password-enable)
 
 (require 'gptel)
-
-;(setq gptel-model 'grok-3-latest
-;      gptel-backend (gptel-make-xai "xAI"
-;                      :stream t
-;                      :key #'gptel-api-key-from-auth-source))
+(setq gptel-model 'grok-3-latest
+      gptel-backend (gptel-make-xai "xAI" :key #'gptel-api-key-from-auth-source))
 
 (global-set-key (kbd "C-c C-l") 'gptel-menu)
+
 
 (global-tree-sitter-mode)
 
@@ -63,4 +53,3 @@
       (append compilation-error-regexp-alist
               '(("ERROR: \\([^:]+\\):\\([0-9]+\\)" 1 2))))
 
-(require 'magit)
