@@ -13,6 +13,7 @@
  '(display-line-numbers t)
  '(epg-pinentry-mode 'loopback)
  '(global-undo-tree-mode t)
+ '(gptel-log-level 'debug)
  '(ido-everywhere t)
  '(ido-mode 'both nil (ido))
  '(indent-tabs-mode nil)
@@ -41,8 +42,12 @@
 (auth-source-1password-enable)
 
 (require 'gptel)
-(setq gptel-model 'grok-3-latest
-      gptel-backend (gptel-make-xai "xAI" :key #'gptel-api-key-from-auth-source))
+;;(setq gptel-model 'grok-3-latest
+;;      gptel-backend (gptel-make-xai "xAI" :key #'gptel-api-key-from-auth-source))
+
+(setq gptel-model 'gemini-2.5-flash-preview-05-20
+      gptel-backend (gptel-make-gemini "gemini" :key #'gptel-api-key-from-auth-source))
+      
 
 (global-set-key (kbd "C-c C-l") 'gptel-menu)
 
@@ -53,3 +58,74 @@
       (append compilation-error-regexp-alist
               '(("ERROR: \\([^:]+\\):\\([0-9]+\\)" 1 2))))
 
+
+(gptel-make-tool
+ :name "read_buffer"                    ; javascript-style snake_case name
+ :function (lambda (buffer)                  ; the function that will run
+             (unless (buffer-live-p (get-buffer buffer))
+               (error "error: buffer %s is not live." buffer))
+             (with-current-buffer  buffer
+               (buffer-substring-no-properties (point-min) (point-max))))
+ :description "return the contents of an emacs buffer"
+ :args (list '(:name "buffer"
+               :type string            ; :type value must be a symbol
+               :description "the name of the buffer whose contents are to be retrieved"))
+ :category "emacs")                     ; An arbitrary label for grouping
+
+
+;; Tool to list the file tree of a directory
+(gptel-make-tool
+ :name "list_file_tree"
+ :function (lambda (directory)
+             (message "list_file_tree %s" directory)
+             (unless (file-directory-p directory)
+               (error "error: directory %s does not exist." directory))
+             (let ((default-directory directory))
+               (with-temp-buffer
+                 (if (zerop (call-process "git" nil t nil "ls-tree" "-r" "--name-only" "HEAD"))
+                     (let ((files (split-string (buffer-string) "\n" t)))
+                       (mapcar (lambda (file) (expand-file-name file directory))
+                               (cl-remove-if-not (lambda (f) (string-suffix-p ".go" f)) files)))
+                   (error "error: failed to run git ls-tree or not in a git repository")))))
+ :description "return a list of all files in a specified repository/project using git ls-tree"
+ :args (list '(:name "directory"
+               :type string
+               :description "the directory path to list the file tree from"))
+ :category "codebase")
+
+;; Tool to read the contents of a specific file
+(gptel-make-tool
+ :name "read_file"
+ :function (lambda (filepath)
+             (unless (file-exists-p filepath)
+               (error "error: file %s does not exist." filepath))
+             (with-temp-buffer
+               (insert-file-contents filepath)
+               (buffer-substring-no-properties (point-min) (point-max))))
+ :description "return the contents of a specific file"
+ :args (list '(:name "filepath"
+               :type string
+               :description "the full path to the file to read"))
+ :category "codebase")
+
+;; Tool to search the codebase using ripgrep (rg)
+(gptel-make-tool
+ :name "search_codebase"
+ :function (lambda (query directory)
+             (message "search_codebase %s %s" query directory)
+             (unless (file-directory-p directory)
+               (error "error: directory %s does not exist." directory))
+             (unless (executable-find "rg")
+               (error "error: ripgrep (rg) is not installed."))
+             (let ((default-directory directory))
+               (shell-command-to-string
+                (format "rg -n -C10 %s"
+                        (shell-quote-argument query)))))
+ :description "search the codebase for a query string using ripgrep, includes 10 lines of context around the match. output includes line numbers"
+ :args (list '(:name "query"
+               :type string
+               :description "the search term to look for in the codebase")
+             '(:name "directory"
+               :type string
+               :description "the directory to search in"))
+ :category "codebase")
