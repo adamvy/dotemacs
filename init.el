@@ -23,7 +23,7 @@
      ("gnu" . "https://elpa.gnu.org/packages/")
      ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
  '(package-selected-packages
-   '(ellama aider rg verb restclient typescript-mode go-mode neotree kotlin-mode tree-sitter-langs swift-mode gptel auth-source-1password spacemacs-theme olivetti nord-theme undo-tree visual-fill visual-fill-column base16-theme magit eglot-java eglot dape helm-project helm-lsp helm lsp-java dap-mode llm projectile project))
+   '(git-link ellama aider rg verb restclient typescript-mode go-mode neotree kotlin-mode tree-sitter-langs swift-mode gptel auth-source-1password spacemacs-theme olivetti nord-theme undo-tree visual-fill visual-fill-column base16-theme magit eglot-java eglot dape helm-project helm-lsp helm lsp-java dap-mode llm projectile project))
  '(tool-bar-mode nil)
  '(visible-bell t)
  '(xref-search-program 'ripgrep))
