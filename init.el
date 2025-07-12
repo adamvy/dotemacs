@@ -7,9 +7,9 @@
  '(c-basic-offset 2)
  '(column-number-mode t)
  '(compilation-scroll-output 'first-error)
- '(custom-enabled-themes '(spacemacs-dark))
+ '(custom-enabled-themes '(modus-vivendi))
  '(custom-safe-themes
-   '("01f347a923dd21661412d4c5a7c7655bf17fb311b57ddbdbd6fce87bd7e58de6" "9b4d0c9f8e8afe73ceb1f1efda39c2fb9914b7f6b8274f34c46aecdac22ced17" "14fde0324d34ca153b45c6f862cd65e4b58190385c44a6ae98ead6b107be29fd" "6a27405fa8bd76f6383be80a76fbc1c0f2194b915c407e92f4eb1619ce0085e1" "a9c8566eabd5d5b84d9ca13cd49bfb53d6dc5a18e8642dfe2a0f54e5e6a62511" "c9bc12faeadf400bd85c286069dff1d3bb3b537be00fff8b5873fb8dbaf4c3eb" "4ab2a0a1b8884a257b0840035cd3ec9cb8efd4fece856131bc62aa1924e96327" "853a614b56bd778cd5a94e7add9d4ceef06203923b4e1192186eb69a6829bc6a" "0f691b0fef27fdeffb52131f21914b6819044659c785109060dbfb72d6b38246" "53a4efdca4c9fb870c3f92e4cfca0fbb638bb29b168a26a363298f9b1d9b9bcf" "7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf" "bbb13492a15c3258f29c21d251da1e62f1abb8bbd492386a673dcfab474186af" "98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd" "6ac2faf17d4d37b6f4bc08203b70e82f4b3b5ce76f102fb4802b3f6c74460743" "1d1f4f5b0f792f0bb1b8f944b8ed93b3b20bbebc4ba072c2b7daff82da23ae86" "039112154ee5166278a7b65790c665fe17fd21c84356b7ad4b90c29ffe0ad606" "f700bc979515153bef7a52ca46a62c0aa519950cc06d539df4f3d38828944a2c" default))
+   '("9af2b1c0728d278281d87dc91ead7f5d9f2287b1ed66ec8941e97ab7a6ab73c0" "a1abf0a3e85adcf8da321d3c7f98f85a120cd50ff5dcfe812a647662f04ad0b2" "a7efec9d0154871a84e1adeabe16ef00ea022fd7f5ac61a1fbc2ff179e88ac75" "6d4363fcb9d3767dc4cd56fcc4845c9a1bda39efacfdb05ba3ee7b1df5b99d3e" "099541a1d6b5225d5dac71f2451198604284785adc618637a6d8ebd130a3e2d8" "23e53a71827abd4c6fd60ae230f22a8799839de56e6780b0a2e5a27e76130c0c" "01f347a923dd21661412d4c5a7c7655bf17fb311b57ddbdbd6fce87bd7e58de6" "9b4d0c9f8e8afe73ceb1f1efda39c2fb9914b7f6b8274f34c46aecdac22ced17" "14fde0324d34ca153b45c6f862cd65e4b58190385c44a6ae98ead6b107be29fd" "6a27405fa8bd76f6383be80a76fbc1c0f2194b915c407e92f4eb1619ce0085e1" "a9c8566eabd5d5b84d9ca13cd49bfb53d6dc5a18e8642dfe2a0f54e5e6a62511" "c9bc12faeadf400bd85c286069dff1d3bb3b537be00fff8b5873fb8dbaf4c3eb" "4ab2a0a1b8884a257b0840035cd3ec9cb8efd4fece856131bc62aa1924e96327" "853a614b56bd778cd5a94e7add9d4ceef06203923b4e1192186eb69a6829bc6a" "0f691b0fef27fdeffb52131f21914b6819044659c785109060dbfb72d6b38246" "53a4efdca4c9fb870c3f92e4cfca0fbb638bb29b168a26a363298f9b1d9b9bcf" "7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf" "bbb13492a15c3258f29c21d251da1e62f1abb8bbd492386a673dcfab474186af" "98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd" "6ac2faf17d4d37b6f4bc08203b70e82f4b3b5ce76f102fb4802b3f6c74460743" "1d1f4f5b0f792f0bb1b8f944b8ed93b3b20bbebc4ba072c2b7daff82da23ae86" "039112154ee5166278a7b65790c665fe17fd21c84356b7ad4b90c29ffe0ad606" "f700bc979515153bef7a52ca46a62c0aa519950cc06d539df4f3d38828944a2c" default))
  '(display-line-numbers t)
  '(epg-pinentry-mode 'loopback)
  '(global-undo-tree-mode t)
@@ -136,3 +136,46 @@
     (dolist (file files)
       (gptel-add-file file))
     (message "Added %d file(s) to gptel context" (length files))))
+
+(defun my-gptel-add-ai-context-files ()
+  "Finds 'ai.context' in the current project root, reads file paths
+  (one per line), and adds them to `gptel-context`.
+  Provides messages on success or failure. If 'ai.context' is not
+  found, offers to create it."
+  (interactive)
+  (let ((proj (project-current)))
+    (unless proj
+      (user-error "No project found. Please open a project first."))
+
+    (let* ((proj-root (project-root proj))
+           (ai-context-file (expand-file-name "ai.context" proj-root)))
+
+      (unless (file-exists-p ai-context-file)
+        (message "File '%s' not found in project root '%s'."
+                 (file-name-nondirectory ai-context-file) proj-root)
+        (ding) ; Make a sound to indicate a non-critical issue
+        (when (yes-or-no-p
+               (format "Would you like to create an empty '%s' file in '%s'? "
+                       (file-name-nondirectory ai-context-file) proj-root))
+          (with-temp-buffer
+            (write-file ai-context-file nil t)) ; write-file creates the file
+          (message "'%s' created." (file-name-nondirectory ai-context-file)))
+        (cl-return-from my-gptel-add-ai-context-files nil)) ; Exit the function
+
+      (message "Reading files from '%s'..." (file-name-nondirectory ai-context-file))
+
+      (let ((added-count 0))
+        (with-temp-buffer
+          (insert-file-contents ai-context-file)
+          ;; split-string with `t` removes empty strings (e.g., from blank lines)
+          (cl-loop for line in (split-string (buffer-string) "\n" t)
+                   do
+                   ;; Resolve file path relative to project root
+                   (let ((file-path (expand-file-name line proj-root)))
+                     (when (file-exists-p file-path)
+                       (gptel-context-add-file file-path)
+                       (setq added-count (+ added-count 1)))
+                     (unless (file-exists-p file-path)
+                       (message "Skipping non-existent file listed in ai.context: %s" file-path)))))
+        (message "Added %d files from '%s' to gptel-context."
+                 added-count (file-name-nondirectory ai-context-file))))))
