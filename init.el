@@ -13,7 +13,21 @@
  '(display-line-numbers t)
  '(epg-pinentry-mode 'loopback)
  '(global-undo-tree-mode t)
+ '(gptel-backend
+   #s(gptel-gemini "gemini" "generativelanguage.googleapis.com" nil "https" nil "/v1beta/models" gptel-api-key-from-auth-source
+                   (gemini-1.5-pro-latest gemini-2.0-flash-exp gemini-1.5-flash gemini-1.5-flash-8b gemini-exp-1206 gemini-2.0-flash gemini-2.0-flash-lite-preview-02-05 gemini-2.0-pro-exp-02-05 gemini-2.0-flash-thinking-exp-01-21 gemini-2.0-flash-exp gemini-2.5-pro-exp-03-25 gemini-2.5-pro-preview-03-25 gemini-2.5-flash-preview-04-17 gemini-2.5-flash-preview-05-20 gemini-2.5-pro-preview-05-06 gemini-2.0-flash-thinking-exp)
+                   #[0 "\303\203\20\0\14\203\20\0\15\203\20\0\306\202\21\0\307\310\311\301\302\300\16\13\6\6\312 &\7\207"
+                       ["/v1beta/models" "https" "generativelanguage.googleapis.com" nil gptel-use-curl gptel-stream "streamGenerateContent" "generateContent" format "%s://%s%s/%s:%s?key=%s" gptel--get-api-key gptel-model]
+                       9]
+                   nil nil nil))
+ '(gptel-directives
+   '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
+     (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
+     (writing . "You are a large language model and a writing assistant. Respond concisely.")
+     (chat . "You are a large language model and a conversation partner. Respond concisely.")
+     (aiprogrammer . "You are a careful programmer living inside emacs. The user is providing you code with tasks left to do marked in comments with AI:  Find and complete the tasks.  First ouline your thinking and for each task explain what you want to do, and then for provide the code changes your are looking for as patch.  A tool will come later and apply your patch.  Be sure to clean up any ai comments that your have completed.  If you require any clarifying questions or information from the user, just ask and they will reply.")))
  '(gptel-log-level 'debug)
+ '(gptel-model 'gemini-2.5-flash-preview-05-20)
  '(ido-everywhere t)
  '(ido-mode 'both nil (ido))
  '(indent-tabs-mode nil)
@@ -23,7 +37,7 @@
      ("gnu" . "https://elpa.gnu.org/packages/")
      ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
  '(package-selected-packages
-   '(ellama aider rg verb restclient typescript-mode go-mode neotree kotlin-mode tree-sitter-langs swift-mode gptel auth-source-1password spacemacs-theme olivetti nord-theme undo-tree visual-fill visual-fill-column base16-theme magit eglot-java eglot dape helm-project helm-lsp helm lsp-java dap-mode llm projectile project))
+   '(modus-themes git-link ellama aider rg verb restclient typescript-mode go-mode neotree kotlin-mode tree-sitter-langs swift-mode gptel auth-source-1password spacemacs-theme olivetti nord-theme undo-tree visual-fill visual-fill-column base16-theme magit eglot-java eglot dape helm-project helm-lsp helm lsp-java dap-mode llm projectile project))
  '(tool-bar-mode nil)
  '(visible-bell t)
  '(xref-search-program 'ripgrep))
@@ -52,7 +66,8 @@
 (global-set-key (kbd "C-c C-l") 'gptel-menu)
 
 
-(global-tree-sitter-mode)
+(global-auto-revert-mode t)
+(global-tree-sitter-mode t)
 
 (setq compilation-error-regexp-alist
       (append compilation-error-regexp-alist
